@@ -1,11 +1,15 @@
 # - Variables -
 set $mod Mod4
-set $term foot --config ~/.config/sway/foot/foot.ini
-set $files nautilus
+set $term foot
+set $files GTK_THEME=Dracula nautilus
 set $menu dmenu_path | wofi --show drun | xargs swaymsg exec --
 
+
 # - Autostart -
-exec mako --config ~/.config/sway/mako/config
+exec gsettings set org.gnome.desktop.interface gtk-theme Dracula
+exec gsettings set org.gnome.desktop.wm.preferences theme Dracula
+exec GTK_THEME=Dracula 
+
 
 # - Background -
 output * bg ~/.config/sway/Wallpaper.png fill
@@ -19,8 +23,17 @@ input "type:keyboard" {
 
 
 # - Floating windows -
-for_window [title="foot"] floating enable
-for_window [title="mpv"] floating enable
+for_window [class=".*"] floating enable
+
+
+# - Eyecandy -
+corner_radius 15
+
+blur on
+blur_passes 2
+blur_radius 10
+
+default_dim_inactive 0.1
 
 
 # - Binds -
@@ -31,7 +44,7 @@ bindsym $mod+a exec $files
 bindsym $mod+w kill
 
 bindsym $mod+c reload
-bindsym $mod+m swaymsg exit
+bindsym $mod+m exec swaymsg exit
 
 bindsym $mod+r fullscreen
 bindsym $mod+e floating toggle
@@ -46,14 +59,15 @@ bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 
 bindsym $mod+p exec slurp | grim -g - $(xdg-user-dir PICTURES)/$(date +'screenshot_%Y-%m-%d-%H%M%S.png')
-bindsym $mod+o exec sh ~/.config/sway/record.sh
+bindsym $mod+o exec sh ~/.config/sway/Scripts/record.sh
+bindsym $mod+i exec sh ~/.config/sway/Scripts/record_gif.sh
+
+bindsym $mod+d exec notify-send "$(date "+%H:%M")  |  $(date "+%B")  |  $(date "+%A")" "Have a good day!"
 
 
 # - Border / Titlebar tweaks -
 default_border none
 default_floating_border none
-titlebar_padding 1
-titlebar_border_thickness 0
 
 
 # - Switch to workspace -
